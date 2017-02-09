@@ -1,0 +1,58 @@
+/* Displays top left image of ralphy.gif ("Yes. I love Lisa Simpson...") */
+@media only screen and (min-width: 1400px) {
+	div.ralphy {
+		background-image: url("ralphy.gif");
+		width: 250px;
+		height: 184px;
+	}
+}
+
+/* Displays top right image of ralphy.gif ("No-o-o-o!") */
+@media only screen and (min-width: 1200px) and (max-width: 1400px) {
+	div.ralphy {
+		background-image: url("ralphy.gif");
+		background-position: -250px 0px;
+		width: 250px;
+		height: 184px;
+	}
+}
+
+/* Displays middle left image of ralphy.gif ("Now you listen to me!...") */
+@media only screen and (min-width: 1000px) and (max-width: 1200px) {
+	div.ralphy {
+		background-image: url("ralphy.gif");
+		background-position: 0px -186px;
+		width: 250px;
+		height: 186px;
+	}
+}
+
+/* Displays middle right image of ralphy.gif ("And the only reason...) */
+@media only screen and (min-width: 800px) and (max-width: 1000px) {
+	div.ralphy {
+		background-image: url("ralphy.gif");
+		background-position: -250px -186px;
+		width: 250px;
+		height: 186px;
+	}
+}
+
+/* Displays bottom left image of ralphy.gif ("Watch this, Elise...") */
+@media only screen and (min-width: 600px) and (max-width: 800px) {
+	div.ralphy {
+		background-image: url("ralphy.gif");
+		background-position: 0px -372px;
+		width: 250px;
+		height: 186px;
+	}
+}
+
+/* Displays bottom right image of ralphy.gif (moving image) */
+@media only screen and (max-width: 600px) {
+	div.ralphy {
+		background-image: url("ralphy.gif");
+		background-position: -250px -372px;
+		width: 250px;
+		height: 186px;
+	}
+}
