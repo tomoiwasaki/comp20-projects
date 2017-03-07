@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>The Black Car Service</title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+		<link rel="stylesheet" href="map_style.css" />
+		
+		<script>
+			var myLat = 0;
+			var myLng = 0;
+			var me = new google.maps.LatLng(myLat, myLng);
+			var myOptions = {
+						zoom: 13,
+						center: me,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					};
+			var map;
+			var marker;
+			var infowindow = new google.maps.InfoWindow();
+			
+			function init()
+			{
+				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+				getMyLocation();
+			}
+
+			function getMyLocation() {
+				if (navigator.geolocation) { 
+					navigator.geolocation.getCurrentPosition(function(position) {
+						myLat = position.coords.latitude;
+						myLng = position.coords.longitude;
+						
+						renderMap();
+					});
+				}
+				else {
+					alert("Geolocation is not supported by your web browser.");
+				}
+			}
+
+			var request = new XMLHttpRequest();
+			var url = "https://defense-in-derpth.herokuapp.com/submit";
+			var params = "username=3fUAMsR2&lat=" + myLat + "&lng=" + myLng;
+			request.open("POST", url, true);
+			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			request.onreadystatechange = function () {
+				if(request.readyState == 4 && request.status == 200) {
+					elements = JSON.parse(request.responseText);
+					newData = "";
+					for (count = 0; count < elements["vehicles"].length; count++) {
+						newData += "<p>" + elements["vehicles"][count]["lat"] + " and " + elements["vehicles"][count]["lng"] + "</p>";
+					}
+					console.log(elements["vehicles"].length);
+					console.log(newData);
+					console.log(elements);
+					console.log(request.responseText);
+				}	
+			};
+			request.send(params);
+			
+			function renderMap()
+			{
+				me = new google.maps.LatLng(myLat, myLng);
+				
+				map.panTo(me);
+
+				marker = new google.maps.Marker({
+					position: me,
+					title: "My Location"
+				});
+				marker.setMap(map);
+					
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.setContent(marker.title);
+					infowindow.open(map, marker);
+				});
+			}
+		</script>
+	</head>
+	
+	<body onload="init()">
+		<div id="map_canvas"></div>
+	</body>
+</html>
