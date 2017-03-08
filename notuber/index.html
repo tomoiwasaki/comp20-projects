@@ -48,11 +48,13 @@
 			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			request.onreadystatechange = function () {
 				if(request.readyState == 4 && request.status == 200) {
-					elements = JSON.parse(request.responseText);	
+					elements = JSON.parse(request.responseText);
 				}
 			}; 
 			request.send(params);
 			
+
+
 			function renderMap()
 			{
 				me = new google.maps.LatLng(myLat, myLng);
@@ -74,19 +76,28 @@
 
 				};
 				newData = "";
-				for (count = 0; count < elements["vehicles"].length; count++) {		
-					var vlat = elements["vehicles"][count]["lat"];
-					var vlng = elements["vehicles"][count]["lng"];
+				type = Object.getOwnPropertyNames(elements);
+				for (count = 0; count < elements[type].length; count++) {		
+					var vlat = elements[type][count]["lat"];
+					var vlng = elements[type][count]["lng"];
 					var vmarker = new google.maps.Marker({
 						position: new google.maps.LatLng(vlat, vlng),
-						icon: icons.vehicle
+						title: elements[type][count]["username"],
+						icon: icons.vehicle // how to incorporate if statement?
 					});
+
 					vmarker.setMap(map);
+
+					google.maps.event.addListener(vmarker, 'click', function() {
+						infowindow.setContent(vmarker.title);
+						infowindow.open(map, vmarker);
+					}); // only showing marker of last vehicle in array
 				}
+
 						
 				marker = new google.maps.Marker({
 					position: me,
-					title: "My Location",
+					title: "3fUAMsR2",
 					icon: icons.myLocation
 				});
 				marker.setMap(map);
