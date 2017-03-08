@@ -13,7 +13,7 @@
 			var myLng = 0;
 			var me = new google.maps.LatLng(myLat, myLng);
 			var myOptions = {
-						zoom: 13,
+						zoom: 15,
 						center: me,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
@@ -48,17 +48,9 @@
 			request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			request.onreadystatechange = function () {
 				if(request.readyState == 4 && request.status == 200) {
-					elements = JSON.parse(request.responseText);
-					newData = "";
-					for (count = 0; count < elements["vehicles"].length; count++) {
-						newData += "<p>" + elements["vehicles"][count]["lat"] + " and " + elements["vehicles"][count]["lng"] + "</p>";
-					}
-					console.log(elements["vehicles"].length);
-					console.log(newData);
-					console.log(elements);
-					console.log(request.responseText);
-				}	
-			};
+					elements = JSON.parse(request.responseText);	
+				}
+			}; 
 			request.send(params);
 			
 			function renderMap()
@@ -67,9 +59,35 @@
 				
 				map.panTo(me);
 
+				var icons = {
+					myLocation: {
+						url: 'file:///Users/tiwasaki/Downloads/location_icon.png',
+						scaledSize: new google.maps.Size(22.6, 40.65)
+					},
+					vehicle: {
+						url: 'file:///Users/tiwasaki/Downloads/black_car.png',
+						scaledSize: new google.maps.Size(30, 15)
+					},
+					passenger: {
+						url: 'file:///Users/tiwasaki/Downloads/passanger.png'
+					}
+
+				};
+				newData = "";
+				for (count = 0; count < elements["vehicles"].length; count++) {		
+					var vlat = elements["vehicles"][count]["lat"];
+					var vlng = elements["vehicles"][count]["lng"];
+					var vmarker = new google.maps.Marker({
+						position: new google.maps.LatLng(vlat, vlng),
+						icon: icons.vehicle
+					});
+					vmarker.setMap(map);
+				}
+						
 				marker = new google.maps.Marker({
 					position: me,
-					title: "My Location"
+					title: "My Location",
+					icon: icons.myLocation
 				});
 				marker.setMap(map);
 					
@@ -78,6 +96,7 @@
 					infowindow.open(map, marker);
 				});
 			}
+			
 		</script>
 	</head>
 	
