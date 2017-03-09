@@ -5,7 +5,7 @@
 	<head>
 		<title>The Black Car Service</title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
 		<link rel="stylesheet" href="map_style.css" />
 		
 		<script>
@@ -62,43 +62,52 @@
 				map.panTo(me);
 
 				var icons = {
-					myLocation: {
-						url: 'file:///Users/tiwasaki/Downloads/location_icon.png',
-						scaledSize: new google.maps.Size(22.6, 40.65)
+					user: {
+						url: 'file:///Users/tiwasaki/Downloads/red-star.png',
+						scaledSize: new google.maps.Size(30, 30)
 					},
 					vehicle: {
 						url: 'file:///Users/tiwasaki/Downloads/black_car.png',
 						scaledSize: new google.maps.Size(30, 15)
 					},
 					passenger: {
-						url: 'file:///Users/tiwasaki/Downloads/passanger.png'
+						url: 'file:///Users/tiwasaki/Downloads/passanger.png',
+						scaledSize: new google.maps.Size(30, 30)
 					}
 
 				};
-				newData = "";
+				var markIcon;
+
 				type = Object.getOwnPropertyNames(elements);
+				if(type == "vehicles")
+					markIcon = icons.vehicle;
+				else if(type == "passengers")
+					markIcon = icons.passenger;
+
 				for (count = 0; count < elements[type].length; count++) {		
 					var vlat = elements[type][count]["lat"];
 					var vlng = elements[type][count]["lng"];
+					var pvlocation = new google.maps.LatLng(vlat, vlng);
+					
+					var distance = google.maps.geometry.spherical.computeDistanceBetween(me, pvlocation) * 0.0006;
 					var vmarker = new google.maps.Marker({
 						position: new google.maps.LatLng(vlat, vlng),
-						title: elements[type][count]["username"],
-						icon: icons.vehicle // how to incorporate if statement?
+						title: elements[type][count]["username"] + "<p>" + distance.toFixed(4) + " miles away",
+						icon: markIcon
 					});
 
 					vmarker.setMap(map);
 
 					google.maps.event.addListener(vmarker, 'click', function() {
-						infowindow.setContent(vmarker.title);
-						infowindow.open(map, vmarker);
-					}); // only showing marker of last vehicle in array
+						infowindow.setContent(this.title);
+						infowindow.open(map, this);
+					});
 				}
-
 						
 				marker = new google.maps.Marker({
 					position: me,
-					title: "3fUAMsR2",
-					icon: icons.myLocation
+					title: "3fUAMsR2 <p> Your Location",
+					icon: icons.user
 				});
 				marker.setMap(map);
 					
@@ -107,7 +116,6 @@
 					infowindow.open(map, marker);
 				});
 			}
-			
 		</script>
 	</head>
 	
